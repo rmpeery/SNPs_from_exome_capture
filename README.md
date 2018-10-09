@@ -4,3 +4,5 @@ Scripts for Biol 633 course
 Perl script #1 - separateFiles.pl is used to parse SNP genotyping files. The file uses a list of SNP ID's or individual ID's to bin a genotyping file into keep and toss. After downloading the script either update permissions to make it executable or use perl ./separateFiles.pl. To use:
 $ perl ./separateFiles.pl inputlistfile snpCallFile
 
+Shell script (squareToLinearMatrix_sampleData.sh) facilitates generating a tidy matrix from a square matrix.
+
