@@ -1,0 +1,11 @@
+awk '{print $1 ",ind1," $2}' SampleMatrix.txt > temp1.txt;
+awk '{print $1 ",ind2," $3}' SampleMatrix.txt > temp2.txt;
+awk '{print $1 ",ind3," $4}' SampleMatrix.txt > temp3.txt;
+awk '{print $1 ",ind4," $5}' SampleMatrix.txt > temp4.txt;
+awk '{print $1 ",ind5," $6}' SampleMatrix.txt > temp5.txt;
+awk '{print $1 ",ind6," $7}' SampleMatrix.txt > temp6.txt;
+awk '{print $1 ",ind7," $8}' SampleMatrix.txt > temp7.txt;
+awk '{print $1 ",ind8," $9}' SampleMatrix.txt > temp8.txt;
+awk '{print $1 ",ind9," $10}' SampleMatrix.txt > temp9.txt;
+cat temp1.txt temp2.txt temp3.txt temp4.txt temp5.txt temp6.txt temp7.txt temp8.txt temp9.txt > temp.csv;
+rm temp1.txt temp2.txt temp3.txt temp4.txt temp5.txt temp6.txt temp7.txt temp8.txt temp9.txt;
