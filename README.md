@@ -5,7 +5,7 @@ The workflow is organized from trimming through the final bcf file. All scripts 
 This script uses FastQC[1] to generate a summary of quality metrics per sequnce. \
   00_QC.slm
 
-The reads are then summarized into one html document with MultiQC[2]. If you need to set up a python environment see these instructions: https://docs.alliancecan.ca/wiki/Python/en\
+The reads are then summarized into one html document with MultiQC[2]. If you need to set up a python environment see these instructions: https://docs.alliancecan.ca/wiki/Python/en \
   01_MultiQC.slm
 
 ## Trim reads
