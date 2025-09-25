@@ -1,0 +1,90 @@
+#!/bin/bash
+#SBATCH --mail-user=you@email.ca # change this
+#SBATCH --account=account # change this
+#SBATCH -t 0-1:00
+#SBATCH --cpus-per-task=8
+#SBATCH --mem-per-cpu=1G
+#SBATCH --mail-type=ALL
+#SBATCH --job-name=name # change this
+#SBATCH --array=1-500%50 # change this
+
+# use module spider to make sure the latest picard is used
+module load StdEnv/2023 picard/3.1.0
+
+# crash whole run not just one array if something is broken
+set -euo pipefail
+
+# change to match your file structure
+DIR="/home/your_path"
+BAM="$DIR/bams/sort"
+OUT="$DIR/bams/dupes"
+METADATA="$DIR/markDupeMetadata.tsv"
+LOG="$DIR/logs/markDupes"
+
+# METATDATA format: BAM_FILE   RGID   RGPU   RGLB   RGSM   RGCN
+# idea for metadata input from Josie Paris's repo on SNP calling
+# https://github.com/josieparis/gatk-snp-calling/blob/main/SNP_calling/scripts/3_add_readgroups.sh
+
+# make sure out dir exist
+mkdir -p "$OUT" "$LOG"
+
+# safety check - make sure metadata exists
+if [ ! -f "$METADATA" ]; then
+    echo "Missing $METADATA"
+    exit 1
+fi
+
+# set up the array
+LINE_NUM=${SLURM_ARRAY_TASK_ID:-1}
+# read the metadata file by LINE
+LINE=$(sed -n "${LINE_NUM}p" "$METADATA")
+
+# split tab-delimited fields - RG fields need to be in order of file
+BAM_FILE=$(echo "$LINE" | cut -f1)
+RGID=$(echo "$LINE" | cut -f2) # SAMPLE
+RGPU=$(echo "$LINE" | cut -f3) # run barcode
+RGLB=$(echo "$LINE" | cut -f4) # SAMPLE.PLATE
+RGSM=$(echo "$LINE" | cut -f5) # SAMPLE
+# more robust? IFS=$'\t' read -r BAM_FILE RGID RGPU RGLB RGSM RGCN <<< "$LINE"
+RGPL=ILLUMINA # platform
+RGCN=SickKids # sequencing center
+
+SAMPLE=$(basename "$BAM_FILE" .bam) # check file extension
+OUT_FILE="${SAMPLE}.mapSortRdGp.bam"
+LOG_FILE="${SAMPLE}_addRG.log"
+
+echo "Processing $SAMPLE... ($LINE_NUM)"
+
+java -Xmx8G -jar $EBROOTPICARD/picard.jar AddOrReplaceReadGroups \
+    -TMP_DIR /picard_temp/ \
+    -INPUT "$BAM/$BAM_FILE" \
+    -OUTPUT "$OUT/$OUT_FILE" \
+    -ID "$RGID" \
+    -PU "$RGPU" \
+    -LB "$RGLB" \
+    -PL "$RGPL" \
+    -SM "$RGSM" \
+    -CN "$RGCN" \
+    -CREATE_INDEX true \
+    > "$LOG/$LOG_FILE" 2>&1
+
+echo "Finished: $OUT_FILE (log: $LOG_FILE)"
+
+
+## Descriptions: https://gatk.broadinstitute.org/hc/en-us/articles/360037226472-AddOrReplaceReadGroups-Picard
+# required for AddOrReplaceReadGroups
+# RGID: Read-Group ID (mostly used if a sample spans lanes etc.); required
+# RGLB: read group library; required
+# RGPU: Read-Group platform unit (eg. run barcode); required
+# RGSM: Read-Group sample name; required
+
+# example 1 https://github.com/josieparis/gatk-snp-calling/blob/main/SNP_calling/scripts/3_add_readgroups.sh
+# RGSM=${simpleID} \
+# RGLB=${simpleID}.${seq_num} \
+# RGID=${flowcell}.${lane} \
+# RGPU=${flowcell}${lane}.${barcode} \
+# RGPL=${instrument}
+
+# example 2 https://github.com/rachelmoran28/cavefish_2019_pipeLINE/tree/master
+# where s = sample
+# RGID=${s} RGLB=${s} RGPL="Illumina" RGPU=${s} RGSM=${s}
