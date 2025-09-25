@@ -2,7 +2,7 @@
 The workflow is organized from trimming through the final bcf file. All scripts are formatted to run through a slurm queueing system. In this case The Digital Research Alliance (formerly ComputeCanada).
 
 ## Quality check reads
-This script uses FastQC^1 to generate a summary of quality metrics per sequnce.
+This script uses FastQC^1 to generate a summary of quality metrics per sequnce. \
   00_QC.slm
 
 The reads are then summarized into one html document with MultiQC^2.
