@@ -14,8 +14,8 @@ Reads are trimmed with trimmomatic[3] using input from QC including the length t
 
 ## QC again
 
-## Map reads
-Reads are mapped to the reference exome using BWA-MEM2[4] \
+## Index reference and map reads
+Reads are mapped to the indexed reference exome using BWA-MEM2[4] \
   03_bwamemPE.slm
 
 
