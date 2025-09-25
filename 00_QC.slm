@@ -1,0 +1,27 @@
+#!/bin/bash
+#SBATCH --mail-user=<yourEmailHere>
+#SBATCH --account=<yourAccountHere>
+#SBATCH -t 0-1:30
+#SBATCH --cpus-per-task=16
+#SBATCH --mem-per-cpu=512M
+#SBATCH --mail-type=ALL
+#SBATCH --job-name=<jobName>
+#SBATCH --array=<noOfFiles>
+
+module load StdEnv/2023 fastqc/0.12.1
+
+DIR="<path>"
+RDS="<path>"
+OUT="<path>"
+
+mkdir -p "$OUT"
+
+# Create an array of input files
+readarray -t FILES < <(find "$RDS" -name "*.fastq.gz" | sort)
+
+# Adjust for 0-based indexing in Bash arrays
+INDEX=$((SLURM_ARRAY_TASK_ID - 1))
+FILE="${FILES[$INDEX]}"
+
+# Run FastQC on the selected file
+fastqc -o "$OUT" -t 16 --noextract "$FILE"
