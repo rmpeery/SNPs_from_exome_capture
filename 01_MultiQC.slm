@@ -1,0 +1,23 @@
+#!/bin/bash
+#SBATCH --mail-user=<yourEmail>
+#SBATCH --account=<yourAccount>
+#SBATCH -t 0-1:00
+#SBATCH --cpus-per-task=1
+#SBATCH --mem-per-cpu=1G
+#SBATCH --mail-type=ALL
+#SBATCH --job-name=<jobName>
+
+module load StdEnv/2020 python/3.13.2
+
+source ~/projects/an-pd037/an-rpeery/python/multiqcENV/bin/activate
+
+set -eou pipefail
+
+DIR="<path2trimRds>"
+OUT="$DIR/metrics/mutliqc"
+
+mkdir -p "$OUT"
+
+multiqc "$DIR" -n NAME -o $OUT
+
+deactivate
