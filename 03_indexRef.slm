@@ -1,0 +1,18 @@
+#!/bin/bash
+#SBATCH --mail-user=your@email.ca
+#SBATCH --account=yourAccount
+#SBATCH -t 0-3:00
+#SBATCH --cpus-per-task=2
+#SBATCH --mem-per-cpu=1G
+#SBATCH --mail-type=ALL
+#SBATCH --job-name=name
+
+# use module spider to check that these are the newest versions (or to get the version you need for version control)
+module load StdEnv/2023 bwa/0.7.18
+
+DIR="/home/main_path"
+REF="$DIR/ref"
+NAME="species_abbreviation"
+
+# exomes are small so this should do it
+bwa-mem2 index -p "$NAME" "$REF/reference.fasta"
