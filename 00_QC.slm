@@ -10,9 +10,9 @@
 
 module load StdEnv/2023 fastqc/0.12.1
 
-DIR="<path>"
-RDS="<path>"
-OUT="<path>"
+DIR="mainPath"
+RDS="$DIR/reads/raw_reads/"
+OUT="$DIR/metrics/fastqc"
 
 mkdir -p "$OUT"
 
