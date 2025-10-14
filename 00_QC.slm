@@ -6,7 +6,7 @@
 #SBATCH --mem-per-cpu=512M
 #SBATCH --mail-type=ALL
 #SBATCH --job-name=<jobName>
-#SBATCH --array=<noOfFiles>
+#SBATCH --array=1-#%50 # throttle array to 50 jobs at a time
 
 module load StdEnv/2023 fastqc/0.12.1
 
