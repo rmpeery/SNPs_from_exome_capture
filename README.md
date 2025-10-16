@@ -1,5 +1,5 @@
 # Calling SNPs from exome capture data
-The workflow is organized from trimming through the final bcf file. All scripts are formatted to run through a slurm queueing system. In this case The Digital Research Alliance (formerly ComputeCanada).
+The workflow is organized from trimming through the final bcf file. All scripts are formatted to run through a slurm queueing system. In this case The Digital Research Alliance (formerly ComputeCanada). The input data are short read sequences from Illumina Next-Seq and the transcriptome contigs used to design the baits are the "reference" for mapping reads.
 
 ## Quality check reads
 This script uses FastQC[1] to generate a summary of quality metrics per sequnce. \
