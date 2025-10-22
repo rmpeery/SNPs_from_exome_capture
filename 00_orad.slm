@@ -1,0 +1,40 @@
+#!/bin/bash
+#SBATCH --mail-user=<yourEmailHere>
+#SBATCH --account=<yourAccountHere>
+#SBATCH -t 0-0:10
+#SBATCH --cpus-per-task=16
+#SBATCH --mem-per-cpu=512M
+#SBATCH --mail-type=ALL
+#SBATCH --job-name=<jobName>
+#SBATCH --array=1-#%50 # throttle array to 50 jobs at a time
+
+###
+# script: decompress ora files
+# envrionment: Digital Research Alliance of Canada HPC through slurm queueing
+# assumptions: refernces have been downloaded and uncompressed
+# references: wget https://webdata.illumina.com/downloads/software/dragen/references/ora-270/oradata_all_species.tar.gz
+# tar -xf oradata_all_species.tar.gz
+###
+
+# load modules
+module load StdEnv/2023 orad/2.6.1
+
+DIR="/home/usr/links/scratch"
+RDS="$DIR/reads/compressed"
+REF="$DIR/oraddata/homo_sapiens"
+OUT="$DIR/reads/raw"
+
+mkdir -p "$OUT"
+
+# Create an array of input files
+readarray -t FILES < <(find "$RDS" -name "*.ora" | sort)
+
+# Adjust for 0-based indexing in Bash arrays
+INDEX=$((SLURM_ARRAY_TASK_ID - 1))
+FILE="${FILES[$INDEX]}"
+SAMPLE=$(basename "$FILE" .ora)
+
+# decompress ora files
+# if you don't know the reference run
+# orad info sample.fastq.ora
+orad --ora-reference "$REF" --gz "$FILE" && mv "${SAMPLE}.fastq.gz" "$OUT"
