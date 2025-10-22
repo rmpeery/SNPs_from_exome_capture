@@ -6,7 +6,7 @@ This script decompressed reads that are compressed using Illuminas DRAGEN ORA co
 00_orad.slm
 
 ## Quality check reads
-This script uses FastQC[1] to generate a summary of quality metrics per sequnce. \
+This script uses FastQC[1] to generate a summary of quality metrics per sequence. \
   01_QC.slm
 
 The reads are then summarized into one html document with MultiQC[2]. If you need to set up a python environment see these instructions: https://docs.alliancecan.ca/wiki/Python/en \
