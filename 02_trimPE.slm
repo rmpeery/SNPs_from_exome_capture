@@ -16,7 +16,7 @@ TRIM_OUT="$DIR/reads/trim"
 LOG="$DIR/logs/trim"
 TRIMMOMATIC="/usr/share/java/trimmomatic-0.39.jar" # your path will likely be different
 ADAPTERS="/usr/share/trimmomatic/TruSeq3-PE.fa" # your path will likely be different
-
+# ADAPTERS="$EBROOTTRIMMOMATIC/adapters/TruSeq3-PE.fa" # rorqual
 # make sure out dir exist
 mkdir -p "$TRIM_OUT" "$LOG"
 
