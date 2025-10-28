@@ -13,7 +13,7 @@ source ~/multiqcENV/bin/activate # change to match where your env is
 
 set -eou pipefail
 
-DIR="<path2trimRds>"
+DIR="<path2Rds>"
 OUT="$DIR/metrics/mutliqc"
 
 mkdir -p "$OUT"
