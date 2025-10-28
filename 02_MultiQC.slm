@@ -9,7 +9,7 @@
 
 module load StdEnv/2020 python/3.13.2
 
-source ~/projects/an-pd037/an-rpeery/python/multiqcENV/bin/activate
+source ~/multiqcENV/bin/activate # change to match where your env is
 
 set -eou pipefail
 
