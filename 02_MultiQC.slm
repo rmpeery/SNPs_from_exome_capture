@@ -15,9 +15,10 @@ set -eou pipefail
 
 DIR="<path2fastqc>"
 OUT="$DIR/metrics/mutliqc"
+NAME="reads_multiqc"
 
 mkdir -p "$OUT"
 
-multiqc "$DIR" -n NAME -o $OUT
+multiqc "$DIR" -n "$NAME" -o "$OUT"
 
 deactivate
