@@ -33,7 +33,7 @@ SAMPLE=$(basename "$FWD" _1P.fastq.gz)
 REV="${FWD/_1P.fastq.gz/_2P.fastq.gz}"
 
 # trim
-java -jar $TRIMMOMATIC PE \
+java -jar "$TRIMMOMATIC" PE \
   -threads 8 \
   -summary"$LOG/${SAMPLE}_trimStats.txt" \
   -phred33 \
