@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --mail-user=you@emal.ca
+#SBATCH --mail-user=you@email.ca
 #SBATCH --account=account
 #SBATCH -t 0-6:00
 #SBATCH --cpus-per-task=16
@@ -45,7 +45,7 @@ echo "Queueing sample: $SAMPLE"
 bwa-mem2 mem -M -t "$SLURM_CPUS_PER_TASK" \
    "$REF" \
    "$FWD" "$REV" \
-   | samtools sort -@ "$SLURM_CPUS_PER_TASK" -o "$OUT/${SAMPLE}.map.bam"
+   | samtools sort -@ "$SLURM_CPUS_PER_TASK" -o "$OUT/${SAMPLE}.mapSort.bam"
 
 # metrics
 samtools flagstat "$OUT/${SAMPLE}.map.bam" > "$METRICS/${SAMPLE}.flagstat.txt"
