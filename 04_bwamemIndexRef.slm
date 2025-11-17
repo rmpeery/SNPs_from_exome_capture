@@ -8,8 +8,9 @@
 #SBATCH --job-name=name
 
 # use module spider to check that these are the newest versions (or to get the version you need for version control)
-module load StdEnv/2023 bwa/0.7.18
+module load StdEnv/2023 bwa-mem2/2.2.1
 
+# change to match paths and file names
 DIR="/home/main_path"
 REF="$DIR/ref"
 NAME="species_abbreviation"
