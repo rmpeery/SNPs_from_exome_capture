@@ -12,9 +12,17 @@ This script uses FastQC[1] to generate a summary of quality metrics per sequence
 The reads are then summarized into one html document with MultiQC[2]. If you need to set up a python environment see these instructions: https://docs.alliancecan.ca/wiki/Python/en \
   02_MultiQC.slm
 
+References
+  1. FastQC; https://github.com/s-andrews/FastQC
+  2. MultiQC; https://github.com/MultiQC/MultiQC?tab=readme-ov-file; https://doi.org/10.1093/bioinformatics/btw354
+
 ## Trim reads
 Reads are trimmed with trimmomatic[3] using input from QC including the length to trim, head and crop, adapter contamination etc. \
   03_trimPE.slm
+
+References
+  1. trimmomatic; https://github.com/usadellab/Trimmomatic;
+     Bolger, A. M., Lohse, M., & Usadel, B. (2014). Trimmomatic: A flexible trimmer for Illumina Sequence Data. Bioinformatics, btu170.
 
 ## QC again
 
@@ -25,12 +33,8 @@ Get stats: \
   06_flagstatSummary.sh
 
 References
-  1. FastQC; https://github.com/s-andrews/FastQC
-  2. MultiQC; https://github.com/MultiQC/MultiQC?tab=readme-ov-file; https://doi.org/10.1093/bioinformatics/btw354
-  3. trimmomatic; https://github.com/usadellab/Trimmomatic;
-     Bolger, A. M., Lohse, M., & Usadel, B. (2014). Trimmomatic: A flexible trimmer for Illumina Sequence Data. Bioinformatics, btu170.
-  4. BWA-MEM2; https://github.com/bwa-mem2/bwa-mem2; https://doi.org/10.1109/IPDPS.2019.00041
-  5. samtools; https://www.htslib.org/ and https://github.com/samtools/samtools
+  1. BWA-MEM2; https://github.com/bwa-mem2/bwa-mem2; https://doi.org/10.1109/IPDPS.2019.00041
+  2. samtools; https://www.htslib.org/ and https://github.com/samtools/samtools
 
 ## GATK SNP calling workflow
 This follows closely to the best practices for GATK. However, since this is desiged for exome capture, markDuplicates is not run, because exome capture will have a high proportion of reads with the same start/stop mapping coordiantes by design. \
