@@ -22,6 +22,7 @@ METADATA="$DIR/markDupeMetadata.tsv"
 LOG="$DIR/logs/markDupes"
 
 # METATDATA format: BAM_FILE   RGID   RGPU   RGLB   RGSM   RGCN
+# NOTE: DO NOT USE A HEADER LINE FOR YOUR FILE! The script pulls from line 1
 # idea for metadata input from Josie Paris's repo on SNP calling
 # https://github.com/josieparis/gatk-snp-calling/blob/main/SNP_calling/scripts/3_add_readgroups.sh
 
