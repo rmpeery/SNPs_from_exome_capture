@@ -20,7 +20,9 @@ Reads are trimmed with trimmomatic[3] using input from QC including the length t
 
 ## Index reference and map reads
 Reads are mapped to the indexed reference exome using BWA-MEM2[4] \
-  04_bwamemIndexRef.slm & 04_bwamemPE.slm
+  04_bwamemIndexRef.slm & 05_bwamemPE.slm
+Get stats: \
+  06_flagstatSummary.sh
 
 
   References
@@ -29,3 +31,22 @@ Reads are mapped to the indexed reference exome using BWA-MEM2[4] \
   3. trimmomatic; https://github.com/usadellab/Trimmomatic;
      Bolger, A. M., Lohse, M., & Usadel, B. (2014). Trimmomatic: A flexible trimmer for Illumina Sequence Data. Bioinformatics, btu170.
   4. BWA-MEM2; https://github.com/bwa-mem2/bwa-mem2; https://doi.org/10.1109/IPDPS.2019.00041
+
+## GATK SNP calling workflow
+This follows closely to the best practices for GATK. However, since this is desiged for exome capture, markDuplicates is not run, because exome capture will have a high proportion of reads with the same start/stop mapping coordiantes by design.
+Read groups are added for later ease of vcf/bcf tool use: 07_addRdGrp.slm
+Haplotypes are called for each individual: 08_haploCall.slm
+Then genotypes are called per interval, since transcriptome contigs are the reference, parsing this makes the analysis much faster.
+  09_createGenomeDB.sh is used to prep everything needed to call genotypes
+  10_callSNPs.slm generates the vcf files per interval.
+Finally the intervals are concatinated into one final vcf that needs to go through a validation (use mpileup since we don't have a refernce "known" set of SNPs) and then filtering.
+  11_finalGATK_VCF.slm
+
+## mpileup workflow through angsd wrapper
+Mpileup uses a different likelihood algorithm than GATK and is a good compliment. Freebayes could also be used if it is preferred.
+  12_angsdMpileup.slm
+
+## Generate high-confidence SNP set
+There is no reference SNP set so calling through two algorithms and using the co-occurring SNPs gives the highest confidence SNP dataset.
+  13_HCsnps.slm
+
