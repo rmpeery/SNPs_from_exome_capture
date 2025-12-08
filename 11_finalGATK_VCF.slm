@@ -25,7 +25,7 @@ if [ -z "$vcf_list" ]; then
     exit 1
 fi
 
-bcftools concat -Oz -o "$vcfs/${DATASET}.vcf.gz" $vcf_list
+bcftools concat -Ob -o "$vcfs/${DATASET}.bcf" $vcf_list
 
 # Index the result
-bcftools index "$vcfs/${DATASET}.vcf.gz"
+bcftools index "$vcfs/${DATASET}.bcf"
