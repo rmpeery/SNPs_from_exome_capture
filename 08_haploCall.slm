@@ -1,0 +1,35 @@
+#!/bin/bash
+#SBATCH --you@youremail.com #change
+#SBATCH --account=yourAccount #change
+#SBATCH -t 0-6:00 # depends on genome size
+#SBATCH --cpus-per-task=8 # no gains with more
+#SBATCH --mem-per-cpu=2G
+#SBATCH --mail-type=ALL
+#SBATCH --job-name=nameMe
+#SBATCH --array=1 # test
+##SBATCH --array=2-864%50 # run all the rest
+
+# check that the most recent versions are being loaded with module spider
+module load StdEnv/2023 gatk/4.4.0.0
+module load gcc/12.3 samtools/1.20
+
+# change to match your dir structure
+DIR="/home/username/scratch"
+BAM_IN="$DIR/bams" # read group added bams
+GVCFS="$DIR/gvcfs"
+REF="$DRI/refs/REF.FASTA"
+
+# make sure outdir exists
+mkdir -p "$GVCFS"
+
+# set array of BAM files
+BAM_FILES=($BAM_IN/*.mapSortRdGp.bam)
+BAM=${BAM_FILES[$((SLURM_ARRAY_TASK_ID - 1))]}
+SAMPLE=$(basename "$BAM" .mapSortRdGp.bam)
+
+gatk --java-options "-Xmx14G" HaplotypeCaller \
+     -R $REF \
+     -I $BAM \
+     -O $GVCFS/${SAMPLE}.gvcf.gz \
+     --native-pair-hmm-threads 8
+     -ERC BP_RESOLUTION
