@@ -1,0 +1,21 @@
+#!/bin/bash
+#SBATCH --mail-user=yourname@youremail.com # change
+#SBATCH --account=yourAccount # change
+#SBATCH -t 0-12:00 # depends on genome/exome size
+#SBATCH --cpus-per-task=32
+#SBATCH --mem-per-cpu=2G # should be enough for exome
+#SBATCH --mail-type=ALL
+#SBATCH --job-name=mpileup
+
+module load StdEnv/2023 angsd/0.940
+
+-set eou pipefail
+
+DIR="/home/user/scratch"
+
+# make list of sorted bam files - make sure extensions match yours
+ls "$DIR"/finalBams/*mapSortRdGrp.bam | sort -V >sorted_bam_list.txt # this is going to write the list in the dir you execute the slurm from
+
+# run angsd
+angsd -bam sorted_bam_list.txt -GL 1 -out angsd_pileupSNPs -doMajorMinor 1 \
+  -doMaf 1 -SNP_pval 1e-5 -doGeno 5 -doPost 1 -postCutoff 0.95 -doBcf 1 -nThreads 32
