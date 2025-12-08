@@ -1,0 +1,24 @@
+#!/bin/bash
+#SBATCH --mail-user=yourname@youremail.com # chage
+#SBATCH --account=yourAccount # change
+#SBATCH -t 0-2:00 # depends on number of intervals
+#SBATCH --cpus-per-task=1
+#SBATCH --mem-per-cpu=512M
+#SBATCH --mail-type=ALL
+#SBATCH --job-name=concatVCF
+
+set -eou pipefail
+
+# module spide to make sure latest versions are used
+module load StdEnv/2023 gcc/12.3 bcftools/1.19
+
+# Set paths and dataset name
+vcfs="/home/user/scratch/vcfs/intervalVCFs_splitBed"
+DATASET="yourDatasetName"
+
+# Run the concatenation - make sure file extensions match yours
+vcf_list=$(find "$vcfs" -name "interval_batch_*.bed.vcf.gz" | sort -V)
+bcftools concat -Oz -o "$vcfs/${DATASET}.vcf.gz" $vcf_list
+
+# Index the result
+bcftools index "$vcfs/${DATASET}.vcf.gz"
