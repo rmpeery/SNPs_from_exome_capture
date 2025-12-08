@@ -18,6 +18,13 @@ DATASET="yourDatasetName"
 
 # Run the concatenation - make sure file extensions match yours
 vcf_list=$(find "$vcfs" -name "interval_batch_*.bed.vcf.gz" | sort -V)
+
+# make sure that worked:
+if [ -z "$vcf_list" ]; then
+    echo "Error: No interval VCFs found in $vcfs"
+    exit 1
+fi
+
 bcftools concat -Oz -o "$vcfs/${DATASET}.vcf.gz" $vcf_list
 
 # Index the result
