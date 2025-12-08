@@ -1,0 +1,82 @@
+#!/bin/bash
+#SBATCH --mail-user=yourname@youremail.com # change
+#SBATCH --account=yourAccount # change
+#SBATCH -t 0-8:00 # change for size of genome
+#SBATCH --cpus-per-task=6 # more isn't better unless you need more memory
+#SBATCH --mem-per-cpu=2G
+#SBATCH --mail-type=ALL
+#SBATCH --job-name=genomeDBimport
+#SBATCH --array=1 # test on one
+##SBATCH --array=2-854%50 # throttle real run
+
+### Script to combine gVCFs and then call genotypes across all samples ###
+### script heavily influenced by Josie Paris's github https://github.com/josieparis/gatk-snp-calling ###
+### NOTE: need a dict file that is named reference.dict in same dir as ref ###
+
+# change to be most recent versions avail with module spider look-up
+module load StdEnv/2023 gatk/4.4.0.0
+module load gcc/12.3 bcftools/1.19
+
+set -eou pipefail
+
+# change to match your dir structure
+DIR="/home/user/scratch/"
+output_vcfs="$DIR/vcfs"
+REF="$DIR/refs/reference.fasta"
+interval_dir="$DIR/bed_files"
+gvcfs="$DIR/gvcfs"
+interval_dbs="$DIR/vcfs/interval_dbs_splitBed"
+
+# Safely make output directory
+mkdir -p $output_vcfs $interval_dbs
+
+## Fetch the intervals of interest for the current array task
+## large genome contigs have their own interval, smaller are combined
+
+# Array of target bed files
+bedfiles=("$interval_dir"/interval_batch_*.bed)
+
+# change base count type
+bed="${bedfiles[$((SLURM_ARRAY_TASK_ID - 1))]}"
+
+bedfile=$(basename "$bed")
+
+# kill run if this setup is wrong
+if [ ! -f "$bed" ]; then
+    echo "Error: Interval BED file $bed not found!"
+    exit 1
+fi
+
+# Remove previous database if exists - otherwise run will fail
+rm -rf "$interval_dbs/${bedfile}_db"
+
+# Gather gVCF input files
+gvcf_in=($gvcfs/*.g.vcf.gz) # change this if your file extension is different
+
+cmd=""
+# kill the run if this isn't called correctly
+for file in "${gvcf_in[@]}"; do
+    cmd+="--variant $file "
+done
+
+# Debugging info
+echo "Running on intervals: $bedfile"
+echo "Using reference: $REF"
+echo "Intervals DB Path: $interval_dbs/${bedfile}_db"
+
+mkdir -p $SLURM_JOBID/tmp
+
+# Make database
+gatk --java-options "-Xmx14G -XX:ParallelGCThreads=2" GenomicsDBImport \
+     $cmd \
+     --genomicsdb-workspace-path "$interval_dbs/${bedfile}_db" \
+     --reader-threads 6 \
+     --batch-size 50 \
+     -L "$bed"
+     --tmp-dir $SLURM_JOBID/tmp;
+
+# Genotype
+gatk --java-options "-Xmx14G" GenotypeGVCFs \
+     -R $REF \
+     -V gendb://$interval_dbs/${bedfile}_db \
+     -O "$output_vcfs/${bedfile}.vcf.gz";
