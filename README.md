@@ -24,29 +24,40 @@ Reads are mapped to the indexed reference exome using BWA-MEM2[4] \
 Get stats: \
   06_flagstatSummary.sh
 
-
-  References
+References
   1. FastQC; https://github.com/s-andrews/FastQC
   2. MultiQC; https://github.com/MultiQC/MultiQC?tab=readme-ov-file; https://doi.org/10.1093/bioinformatics/btw354
   3. trimmomatic; https://github.com/usadellab/Trimmomatic;
      Bolger, A. M., Lohse, M., & Usadel, B. (2014). Trimmomatic: A flexible trimmer for Illumina Sequence Data. Bioinformatics, btu170.
   4. BWA-MEM2; https://github.com/bwa-mem2/bwa-mem2; https://doi.org/10.1109/IPDPS.2019.00041
+  5. samtools; https://www.htslib.org/ and https://github.com/samtools/samtools
 
 ## GATK SNP calling workflow
-This follows closely to the best practices for GATK. However, since this is desiged for exome capture, markDuplicates is not run, because exome capture will have a high proportion of reads with the same start/stop mapping coordiantes by design.
-Read groups are added for later ease of vcf/bcf tool use: 07_addRdGrp.slm
-Haplotypes are called for each individual: 08_haploCall.slm
-Then genotypes are called per interval, since transcriptome contigs are the reference, parsing this makes the analysis much faster.
-  09_createGenomeDB.sh is used to prep everything needed to call genotypes
-  10_callSNPs.slm generates the vcf files per interval.
-Finally the intervals are concatinated into one final vcf that needs to go through a validation (use mpileup since we don't have a refernce "known" set of SNPs) and then filtering.
-  11_finalGATK_VCF.slm
+This follows closely to the best practices for GATK. However, since this is desiged for exome capture, markDuplicates is not run, because exome capture will have a high proportion of reads with the same start/stop mapping coordiantes by design. \
+
+Read groups are added for later ease of vcf/bcf tool use: 07_addRdGrp.slm \
+Haplotypes are called for each individual: 08_haploCall.slm \
+Then genotypes are called per interval, since transcriptome contigs are the reference, parsing this makes the analysis much faster. \
+  09_createGenomeDB.sh is used to prep everything needed to call genotypes \
+  10_callSNPs.slm generates the vcf files per interval. \
+Finally the intervals are concatinated into one final vcf that needs to go through a validation step (since we don't have a refernce "known" set of SNPs) and then filtering. \
+  11_finalGATK_VCF.slm \
+
+References
+  1. picard tools; https://broadinstitute.github.io/picard/ and https://github.com/broadinstitute/picard
+  2. GATK; https://gatk.broadinstitute.org/hc/en-us
 
 ## mpileup workflow through angsd wrapper
-Mpileup uses a different likelihood algorithm than GATK and is a good compliment. Freebayes could also be used if it is preferred.
+Mpileup uses a different likelihood algorithm than GATK and is a good compliment. Freebayes could also be used if it is preferred. \
   12_angsdMpileup.slm
 
+References
+1. angsd; https://github.com/ANGSD/angsd and https://www.popgen.dk/angsd/index.php/ANGSD
+
 ## Generate high-confidence SNP set
-There is no reference SNP set so calling through two algorithms and using the co-occurring SNPs gives the highest confidence SNP dataset.
+There is no reference SNP set so calling through two algorithms and using the co-occurring SNPs gives the highest confidence SNP dataset. \
   13_HCsnps.slm
+
+References
+1. bcftools; https://samtools.github.io/bcftools/bcftools.html
 
