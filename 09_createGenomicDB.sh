@@ -11,3 +11,7 @@ awk '{print $1, "0", $2}' <infile.fai >outfile.bed
 
 ## 3. split into intervals
 split -l 500 interval_batch
+
+## 4. gatk dict file
+module load StdEnv/2023 gatk/4.4.0.0
+gatk CreateSequenceDictionary -R reference.fasta
