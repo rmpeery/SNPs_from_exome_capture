@@ -1,0 +1,19 @@
+#!/bin/bash
+#SBATCH --mail-user=yourname@youremail.com # change
+#SBATCH --account=yourAccount # change
+#SBATCH -t 0-1:00 # change for size of genome
+#SBATCH --cpus-per-task=8 # more isn't really much faster
+#SBATCH --mem-per-cpu=512M # depends on file sizes
+#SBATCH --mail-type=ALL
+#SBATCH --job-name=HCsnps
+
+# update as needed (module spider)
+module load StdEnv/2023 gcc/12.3 bcftools/1.19
+
+DIR="/home/user/scratch"
+OUT="$DIR/HCsnps"
+GATK="pathToBCF"
+ANGSD="pathToBCF"
+
+# creates a directory with a README to see what SNPs are in common between the two methods
+bcftools isec -c snps -Ou -p "$DIR" --threads 8 "$GATK" "$ANGSD"
