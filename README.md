@@ -40,9 +40,10 @@ References
 This follows closely to the best practices for GATK. However, since this is desiged for exome capture, markDuplicates is not run, because exome capture will have a high proportion of reads with the same start/stop mapping coordiantes by design. \
 
 Read groups are added for later ease of vcf/bcf tool use: 07_addRdGrp.slm \
-Haplotypes are called for each individual: 08_haploCall.slm \
+08_createGenomeDB.sh is used to prep everything needed to call genotypes \
+
 Then genotypes are called per interval, since transcriptome contigs are the reference, parsing this makes the analysis much faster. \
-  09_createGenomeDB.sh is used to prep everything needed to call genotypes \
+  Haplotypes are called for each individual: 09_haploCall.slm \
   10_callSNPs.slm generates the vcf files per interval. \
 Finally the intervals are concatinated into one final vcf that needs to go through a validation step (since we don't have a refernce "known" set of SNPs) and then filtering. \
   11_finalGATK_VCF.slm \
