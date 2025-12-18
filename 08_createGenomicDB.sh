@@ -10,7 +10,7 @@ samtools faidx reference.fasta
 awk '{print $1, "0", $2}' <infile.fai >outfile.bed
 
 ## 3. split into intervals
-split -l 500 interval_batch outfile.bed
+split -l 500 -d outfile.bed interval_batch_
 mkdir beds
 mv interval_batch* beds
 cd beds
