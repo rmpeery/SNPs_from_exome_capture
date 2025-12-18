@@ -64,19 +64,19 @@ echo "Running on intervals: $bedfile"
 echo "Using reference: $REF"
 echo "Intervals DB Path: $interval_dbs/${bedfile}_db"
 
-mkdir -p $SLURM_JOBID/tmp
+mkdir -p "$SLURM_JOBID/tmp"
 
 # Make database
 gatk --java-options "-Xmx14G -XX:ParallelGCThreads=2" GenomicsDBImport \
-     $cmd \
+     "$cmd" \
      --genomicsdb-workspace-path "$interval_dbs/${bedfile}_db" \
      --reader-threads 6 \
      --batch-size 50 \
-     -L "$bed"
-     --tmp-dir $SLURM_JOBID/tmp;
+     -L "$bed" \
+     --tmp-dir "$SLURM_JOBID/tmp";
 
 # Genotype
 gatk --java-options "-Xmx14G" GenotypeGVCFs \
-     -R $REF \
-     -V gendb://$interval_dbs/${bedfile}_db \
+     -R "$REF" \
+     -V gendb://"$interval_dbs/${bedfile}_db" \
      -O "$output_vcfs/${bedfile}.vcf.gz";
