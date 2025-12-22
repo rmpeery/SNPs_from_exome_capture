@@ -7,7 +7,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --job-name=genomeDBimport
 #SBATCH --array=1 # test on one
-##SBATCH --array=2-854%50 # throttle real run
+##SBATCH --array=2-90%50 # throttle real run; number of intervals not samples
 
 ### Script to combine gVCFs and then call genotypes across all samples ###
 ### script heavily influenced by Josie Paris's github https://github.com/josieparis/gatk-snp-calling ###
@@ -28,7 +28,7 @@ gvcfs="$DIR/gvcfs"
 interval_dbs="$DIR/vcfs/interval_dbs_splitBed"
 
 # Safely make output directory
-mkdir -p $output_vcfs $interval_dbs
+mkdir -p "$output_vcfs" "$interval_dbs"
 
 ## Fetch the intervals of interest for the current array task
 ## large genome contigs have their own interval, smaller are combined
@@ -68,12 +68,12 @@ mkdir -p "$SLURM_JOBID/tmp"
 
 # Make database
 gatk --java-options "-Xmx14G -XX:ParallelGCThreads=2" GenomicsDBImport \
-     "$cmd" \
+     $cmd \
      --genomicsdb-workspace-path "$interval_dbs/${bedfile}_db" \
      --reader-threads 6 \
      --batch-size 50 \
      -L "$bed" \
-     --tmp-dir "$SLURM_JOBID/tmp";
+     --tmp-dir $SLURM_JOBID/tmp;
 
 # Genotype
 gatk --java-options "-Xmx14G" GenotypeGVCFs \
