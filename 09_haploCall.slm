@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --you@youremail.com #change
+#SBATCH --mail-user=you@youremail.com #change
 #SBATCH --account=yourAccount #change
 #SBATCH -t 0-6:00 # depends on number of contigs and size of reference
 #SBATCH --cpus-per-task=8 # no gains with more
