@@ -18,8 +18,8 @@ set -euo pipefail
 DIR="/home/your_path"
 BAM="$DIR/bams/sort"
 OUT="$DIR/bams/dupes"
-METADATA="$DIR/markDupeMetadata.tsv"
-LOG="$DIR/logs/markDupes"
+METADATA="$DIR/readGrpMetadata.tsv"
+LOG="$DIR/logs/addRdGrp"
 
 # METATDATA format: BAM_FILE   RGID   RGPU   RGLB   RGSM   RGCN
 # NOTE: DO NOT USE A HEADER LINE FOR YOUR FILE! The script pulls from line 1
