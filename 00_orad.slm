@@ -37,4 +37,4 @@ SAMPLE=$(basename "$FILE" .ora)
 # decompress ora files
 # if you don't know the reference run
 # orad info sample.fastq.ora
-orad --ora-reference "$REF" --gz "$FILE" && mv "${SAMPLE}.fastq.gz" "$OUT"
+orad --ora-reference "$REF" --gz "$FILE" && mv "$RDS/${SAMPLE}.fastq.gz" "$OUT"
