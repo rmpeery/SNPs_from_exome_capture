@@ -7,7 +7,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --job-name=<jobName>
 
-module load StdEnv/2023 python/3.14.2
+module load StdEnv/2023 python/3.14.2 arrow/24.0.0
 
 source ~/multiqcENV/bin/activate # change to match where your env is
 
