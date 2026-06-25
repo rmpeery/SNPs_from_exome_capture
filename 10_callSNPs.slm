@@ -20,7 +20,7 @@ module load gcc/12.3 bcftools/1.19
 set -eou pipefail
 
 # change to match your dir structure
-DIR="/home/user/scratch/"
+DIR="/home/user/scratch"
 output_vcfs="$DIR/vcfs"
 REF="$DIR/refs/reference.fasta"
 interval_dir="$DIR/bed_files"
